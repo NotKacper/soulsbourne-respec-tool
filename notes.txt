@@ -1,0 +1,39 @@
+SOULSBOURNE RESPEC FINDER
+
+-------------------------
+
+Aims of the program:
+1. Find a suitable build given weapon type, progress in the game, starting class, level and build focus choice (STR, DEX etc.)
+2. Simple UI
+3. Create an algorithm to decide which stuff to dump into ????
+
+------------------------
+
+Algorithm:
+1. Some sort of distribution of the stats according to how important they are ranked:
+    i. assign a number to each one based on weapon style, level and build focus choice
+        I. RATIOS, based off scaling of the item
+            a. then uniform distribution for the rest (5/8 of total points go to the important traits)
+        II. for float division results round then give as an extra point to something.
+2. starting class affects the base template of what the user is aiming for.
+3. Level obviously affects number of skill points that can be dispensed.
+4. place in game - affect what kind of elemental damage to recommend (maybe recommend a specific weapon)
+5. weapon type distribution slightly.
+6. take into consideration the different weapons starting attribute obviously
+    i. maybe make something to aim for future weapons
+
+----------------------------
+
+Objects:
+1. database_handler
+    i. will access the database and return data from it for use in calculations
+2. HTML page accesser
+    i. will acess and edit html inputs and return data from them to use for calculations
+3. respec generator
+    i. Handles all maths and logic for the repec, returns the respec to be output by the html page accesser
+
+---------------------------
+
+=> Learn Node.js {
+    Need to learn how to use it to query a database
+}
