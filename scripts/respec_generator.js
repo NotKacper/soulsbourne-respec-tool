@@ -99,7 +99,7 @@ class RespecGenerator {
 				return 0;
 			case "DEX":
 				// min skil req. + scaling and soft cap
-				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >=3) {
+				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr()) || this.#sorcery.getInputField()) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >=3) {
 					return 3;
 				}
 				return 0;
