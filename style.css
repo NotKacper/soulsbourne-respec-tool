@@ -1,0 +1,13 @@
+h1, h2, body {
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 25%;
+}
+
+.grid-item {
+    text-align: center;
+}

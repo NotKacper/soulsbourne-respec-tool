@@ -4,10 +4,109 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soulsbourne Respec Finder</title>
-    <script src="https://jspreadsheet.com/v5/jspreadsheet.js"></script>
+    <title>Soulsbourne Respec Generator</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="./scripts/html_page_accesser.js"></script>
+    <script src="./scripts/respec_generator.js"></script>
 </head>
 <body>
-    
+    <h1>Soulsbourne Respec Generator</h1>
+    <h2>For brainless respeccing in NG+</h2>
+    <label for="startingClass">Enter your current level and your starting class</label>
+    <div class="grid-container">
+        <select id="startingClass">
+            <option value="Knight">Knight</option>
+            <option value="Mercenary">Mercenary</option>
+            <option value="Warrior">Warrior</option>
+            <option value="Herald">Herald</option>
+            <option value="Thief">Thief</option>
+            <option value="Assassin">Assassin</option>
+            <option value="Sorcerer">Sorcerer</option>
+            <option value="Pyromancer">Pyromancer</option>
+            <option value="Cleric">Cleric</option>
+            <option value="Deprived">Deprived</option>
+        </select>
+    <input id="level" type="number" value="50"></input>
+</div>
+    <br>
+    <label for="strScale">Enter strength scaling and requirements of weapon</label><br>
+    <div class="grid-container">
+    <select id="strScale">
+        <option value="None">None</option>
+        <option value="S">S</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+    </select>
+    <input id="strMin" type="number" value="0"></input>
+</div>
+    <br>
+    <label for="dexScale">Enter dexterity scaling and requirements of weapon</label><br>
+    <div class="grid-container">
+    <select id="dexScale">
+        <option value="None">None</option>
+        <option value="S">S</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+    </select>
+    <input id="dexMin" type="number" value="0"></input><br>
+</div>
+    <label for="intScale">Enter intelligence scaling and requirements of weapon</label><br>
+    <div class="grid-container">
+    <select id="intScale">
+        <option value="None">None</option>
+        <option value="S">S</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+    </select>
+    <input id="intMin" type="number" value="0"></input><br>
+</div>
+    <label for="fthScale">Enter faith scaling of weapon and faith requirements of weapon</label><br>
+    <div class="grid-container">
+    <select id="fthScale">
+        <option value="None">None</option>
+        <option value="S">S</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+    </select>
+    <input id="fthMin" type="number" value="0"></input><br>
+</div>
+<label for="lckScale">Enter luck scaling of weapon and faith requirements of weapon</label><br>
+    <div class="grid-container">
+    <select id="lckScale">
+        <option value="None">None</option>
+        <option value="S">S</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+    </select>
+    <input id="lckMin" type="number" value="0"></input><br>
+</div>
+    <label for="sorcery">Sorcery Build?</label>
+    <input type="checkbox" id="sorcery"></input>
+    <button id="start-btn">Create Respec</button>
+    <p id="vgrOut">VGR 0</p>
+    <p id="atnOut">ATN 0</p>
+    <p id="endOut">END 0</p>
+    <p id="vitOut">VIT 0</p>
+    <p id="strOut">STR 0</p>
+    <p id="dexOut">DEX 0</p>
+    <p id="intOut">INT 0</p>
+    <p id="fthOut">FTH 0</p>
+    <p id="lckOut">LCK 0</p>
+    <script src="./scripts/main.js"></script>
 </body>
 </html>
