@@ -19,6 +19,9 @@ class RespecGenerator {
 	createRespec() {
 		this.#totalSkillPoints = this.#getTotalSkillPoints();
 		const skills = ["VGR", "ATN", "END", "VIT", "STR", "DEX", "INT", "FTH", "LCK"];
+		const setOfValidScales = new Set(["S", "A", "B"]);
+		const scaleSkills = Object.keys(this.#scalingSkills)
+		let n = 0;
 		let changed;
 		let pointsAdded;
 		while (this.#totalSkillPoints > 0) {
@@ -30,11 +33,25 @@ class RespecGenerator {
 				if (pointsAdded > 0) changed = true;
 			}
 			if (changed == false) {
-				const pointsPerSkill = Math.floor(this.#totalSkillPoints / 3);
-				const leftOver = this.#totalSkillPoints - 3*pointsPerSkill;
-				this.#skills.VGR+=pointsPerSkill+leftOver;
-				this.#skills.END+=pointsPerSkill;
-				this.#skills.VIT+=pointsPerSkill;
+				// finds how many skills to spread leftover points to
+				for (const skill of scaleSkills) {
+					if (setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) {
+						n++;
+					}
+				}
+				const pointsPerSkill = Math.floor(this.#totalSkillPoints / n);
+				let leftOver = this.#totalSkillPoints - n*pointsPerSkill;
+				for (const skill of scaleSkills) {
+					if (setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) {
+						this.#skills[skill]+=pointsPerSkill;
+					}
+					if (this.#skills[skill] > 100) {
+						leftOver += this.#skills[skill] - 99;
+						this.#skills[skill] = 99;
+					}
+				}
+				// need to implement a redistribution of the leftover points over all other skills and adding only up to 99.
+				this.#skills.VGR += leftOver;
 				this.#totalSkillPoints = 0;
 			}
 		}
