@@ -1,34 +1,34 @@
 class HtmlPageAccessor {
-    #id;
-    constructor(id) {
-        this.#id = id;
-    }
-    
-    setInputField(newInput) {
-        document.getElementById(this.#id).value = newInput.toString();
-    }
+	#id;
+	constructor(id) {
+		this.#id = id;
+	}
 
-    getInputFieldInt() {
-        return parseInt(document.getElementById(this.#id).value);
-    }
+	setInputField(newInput) {
+		document.getElementById(this.#id).value = newInput.toString();
+	}
 
-    getInputFieldStr() {
-        return document.getElementById(this.#id).value;
-    }
+	getInputFieldInt() {
+		return parseInt(document.getElementById(this.#id).value);
+	}
+
+	getInputFieldStr() {
+		return document.getElementById(this.#id).value;
+	}
 }
 
 class HtmlPageAccessorCheckBox extends HtmlPageAccessor {
-    #id;
-    constructor(id) {
-        super(id);
-        this.#id = id;
-    }
-    
-    setInputField(newInput) {
-        document.getElementById("myCheck").checked = newInput;
-    }
+	#id;
+	constructor(id) {
+		super(id);
+		this.#id = id;
+	}
 
-    getInputField() {
-        return document.getElementById(this.#id).checked;
-    }
+	setInputField(newInput) {
+		document.getElementById("myCheck").checked = newInput;
+	}
+
+	getInputField() {
+		return document.getElementById(this.#id).checked;
+	}
 }

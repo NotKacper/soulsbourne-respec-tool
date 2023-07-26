@@ -16,11 +16,15 @@ class RespecGenerator {
 		this.#skills = {};
 	}
 
+	getSkills() {
+		return this.#skills;
+	}
+
 	createRespec() {
 		this.#totalSkillPoints = this.#getTotalSkillPoints();
 		const skills = ["VGR", "ATN", "END", "VIT", "STR", "DEX", "INT", "FTH", "LCK"];
 		const setOfValidScales = new Set(["S", "A", "B"]);
-		const scaleSkills = Object.keys(this.#scalingSkills)
+		const scaleSkills = Object.keys(this.#scalingSkills);
 		let n = 0;
 		let changed;
 		let pointsAdded;
@@ -39,26 +43,49 @@ class RespecGenerator {
 						n++;
 					}
 				}
-				const pointsPerSkill = Math.floor(this.#totalSkillPoints / n);
-				let leftOver = this.#totalSkillPoints - n*pointsPerSkill;
-				for (const skill of scaleSkills) {
-					if (setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) {
-						this.#skills[skill]+=pointsPerSkill;
+				let leftOver;
+				if (n > 0) {
+					const pointsPerSkill = Math.floor(this.#totalSkillPoints / n);
+					leftOver = this.#totalSkillPoints - n * pointsPerSkill;
+					for (const skill of scaleSkills) {
+						if (setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) {
+							this.#skills[skill] += pointsPerSkill;
+						}
+						if (this.#skills[skill] > 100) {
+							leftOver += this.#skills[skill] - 99;
+							this.#skills[skill] = 99;
+						}
 					}
-					if (this.#skills[skill] > 100) {
-						leftOver += this.#skills[skill] - 99;
-						this.#skills[skill] = 99;
-					}
-				}
-				// need to implement a redistribution of the leftover points over all other skills and adding only up to 99.
-				this.#skills.VGR += leftOver;
+				} else leftOver = this.#totalSkillPoints;
+				this.#distributeLeftOver(leftOver);
 				this.#totalSkillPoints = 0;
 			}
 		}
 	}
 
-	getSkills() {
-		return this.#skills;
+	#distributeLeftOver(points) {
+		let precedence;
+		let scales;
+		if (this.#sorcery.getInputField()) {
+			precedence = ["VGR", "ATN", "END", "VIT", "STR", "DEX", "INT", "FTH", "LCK"];
+			scales = { VGR: 3, ATN: 3, END: 3, VIT: 2, STR: 1, DEX: 1, INT: 1, FTH: 1, LCK: 1 };
+		} else {
+			precedence = ["VGR", "END", "VIT", "STR", "DEX", "INT", "FTH", "ATN", "LCK"];
+			scales = { VGR: 3, ATN: 1, END: 3, VIT: 2, STR: 1, DEX: 1, INT: 1, FTH: 1, LCK: 1 };
+		}
+		let add;
+		while (points > 0) {
+			for (const skill of precedence) {
+				if (points >= scales[skill]) add = scales[skill];
+				else add = points;
+				this.#skills[skill] += add;
+				points -= add;
+				if (this.#skills[skill] >= 100) {
+					points += this.#skills[skill] - 99;
+					this.#skills[skill] = 99;
+				}
+			}
+		}
 	}
 
 	#getTotalSkillPoints() {
@@ -75,7 +102,7 @@ class RespecGenerator {
 			Deprived: { LV: 1, VGR: 10, ATN: 10, END: 10, VIT: 10, STR: 10, DEX: 10, INT: 10, FTH: 10, LCK: 10 },
 		};
 		this.#skills = classes[this.#startingClass.getInputFieldStr()];
-		if (this.#level.getInputFieldInt() > this.#skills.LV) return (this.#level.getInputFieldInt() - this.#skills.LV);
+		if (this.#level.getInputFieldInt() > this.#skills.LV) return this.#level.getInputFieldInt() - this.#skills.LV;
 		alert("Level of character ", this.#level, " cannot be below base level ", this.#skills.LV, ".");
 		return 0;
 	}
@@ -85,56 +112,60 @@ class RespecGenerator {
 		const setOfValidScales = new Set(["S", "A", "B"]);
 		switch (skill) {
 			case "VGR":
-				if (this.#skills[skill] < 20 && this.#totalSkillPoints >=2) {
+				if (this.#skills[skill] < 20 && this.#totalSkillPoints >= 2) {
 					return 2;
-				} else if (this.#skills[skill] < 30 && this.#totalSkillPoints >=1) {
+				} else if (this.#skills[skill] < 30 && this.#totalSkillPoints >= 1) {
 					return 1;
 				}
 				return 0;
 			case "ATN":
-				if (this.#sorcery.getInputField() && this.#skills[skill] < 30  && this.#totalSkillPoints >=1) {
+				if (this.#sorcery.getInputField() && this.#skills[skill] < 30 && this.#totalSkillPoints >= 1) {
 					return 1;
 				}
 				return 0;
 			case "END":
-				if (this.#skills[skill] < 20  && this.#totalSkillPoints >=2) {
+				if (this.#skills[skill] < 20 && this.#totalSkillPoints >= 2) {
 					return 2;
-				} else if (this.#skills[skill] < 30  && this.#totalSkillPoints >=1) {
+				} else if (this.#skills[skill] < 30 && this.#totalSkillPoints >= 1) {
 					return 1;
 				}
 				return 0;
 			case "VIT":
-				if (this.#skills[skill] < 30  && this.#totalSkillPoints >=1) {
+				if (this.#skills[skill] < 30 && this.#totalSkillPoints >= 1) {
 					return 1;
 				}
 				return 0;
 			case "STR":
 				// min skil req. + scaling and soft cap
-				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR  && this.#totalSkillPoints >=3) {
+				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >= 3) {
 					return 3;
 				}
 				return 0;
 			case "DEX":
 				// min skil req. + scaling and soft cap
-				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr()) || this.#sorcery.getInputField()) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >=3) {
+				if (
+					(this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr()) || this.#sorcery.getInputField()) &&
+					this.#skills[skill] < softCaps.STR &&
+					this.#totalSkillPoints >= 3
+				) {
 					return 3;
 				}
 				return 0;
 			case "INT":
 				// min skil req. + scaling and soft cap
-				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >=3) {
+				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >= 3) {
 					return 3;
 				}
 				return 0;
 			case "FTH":
 				// min skil req. + scaling and soft cap
-				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >=3) {
+				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >= 3) {
 					return 3;
 				}
 				return 0;
 			case "LCK":
 				// min skil req. + scaling and soft cap
-				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >=3) {
+				if ((this.#skills[skill] < this.#minimumSkills[skill].getInputFieldInt() || setOfValidScales.has(this.#scalingSkills[skill].getInputFieldStr())) && this.#skills[skill] < softCaps.STR && this.#totalSkillPoints >= 3) {
 					return 3;
 				}
 				return 0;
