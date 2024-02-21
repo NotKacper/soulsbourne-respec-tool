@@ -109,7 +109,7 @@ class RespecGenerator {
 
 	#allocatePointsForSkill(skill) {
 		const softCaps = { VGR: 44, ATN: 40, END: 40, VIT: 40, STR: 60, DEX: 50, INT: 50, FTH: 60, LCK: 99 };
-		const setOfValidScales = new Set(["S", "A", "B"]);
+		const setOfValidScales = new Set(["S", "A", "B","C","D"]);
 		switch (skill) {
 			case "VGR":
 				if (this.#skills[skill] < 20 && this.#totalSkillPoints >= 2) {
